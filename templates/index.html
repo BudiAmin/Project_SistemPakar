@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Diagnosis Kerusakan Pompa Air</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <!-- CSS akan dimuat dari file terpisah -->
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar">
+          <h3 class="mb-4">
+            Pompa Air <span class="badge bg-primary">Pro</span>
+          </h3>
+
+          <div class="list-group mb-4">
+            <a
+              href="#"
+              class="list-group-item active d-flex align-items-center"
+            >
+              <i class="bi bi-grid me-2"></i> Dashboard
+            </a>
+            <a
+              href="#"
+              class="list-group-item d-flex align-items-center"
+              id="history-toggle"
+            >
+              <i class="bi bi-clock-history me-2"></i> Riwayat
+            </a>
+            <a
+              href="#"
+              class="list-group-item d-flex align-items-center"
+              id="chatbot-toggle"
+            >
+              <i class="bi bi-chat-dots me-2"></i> Bantuan
+            </a>
+          </div>
+
+          <div class="card p-3">
+            <h5>Rentang Diagnosis</h5>
+            <div class="range-info">
+              <div class="range-item bg-success text-white">
+                <small>Ringan</small>
+                <div>0-40%</div>
+              </div>
+              <div class="range-item bg-warning">
+                <small>Sedang</small>
+                <div>40-60%</div>
+              </div>
+              <div class="range-item bg-danger text-white">
+                <small>Berat</small>
+                <div>60-100%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Riwayat (initially hidden) -->
+          <div id="history-section" class="card p-3 mt-3" style="display: none">
+            <h5>Riwayat Diagnosis</h5>
+            <div id="history-list">
+              <!-- History items will be added here -->
+            </div>
+          </div>
+
+          <!-- Chatbot (initially hidden) -->
+          <div id="chatbot-section" class="card chatbot-section">
+            <div class="chat-header">
+              <h5 class="mb-0">Asisten Pompa Air</h5>
+              <button type="button" class="btn-close" id="close-chat"></button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="message bot-message">
+                Halo! Saya asisten virtual untuk diagnosa pompa air. Ada yang
+                bisa saya bantu?
+              </div>
+            </div>
+            <div class="chat-suggestions">
+              <div class="suggestion-chip">Apa itu seal mechanic?</div>
+              <div class="suggestion-chip">Cara merawat pompa air?</div>
+              <div class="suggestion-chip">Apa penyebab suara bising?</div>
+              <div class="suggestion-chip">Berapa tekanan normal?</div>
+            </div>
+            <div class="chat-input">
+              <input
+                type="text"
+                class="form-control"
+                id="chat-input"
+                placeholder="Ketik pertanyaan..."
+              />
+              <button class="btn btn-primary ms-2" id="send-message">
+                <i class="bi bi-send"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+          <div class="row mb-4">
+            <div class="col">
+              <h2>Diagnosis Kerusakan</h2>
+            </div>
+          </div>
+
+          <!-- Pump Diagram Section -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="pump-diagram">
+                    <div
+                      class="component bearing"
+                      data-component="bearing"
+                      title="Bearing"
+                    ></div>
+                    <div
+                      class="component seal"
+                      data-component="seal"
+                      title="Seal Mechanic"
+                    ></div>
+                    <div
+                      class="component dinamo"
+                      data-component="dinamo"
+                      title="Dinamo"
+                    ></div>
+                    <div
+                      class="component kipas"
+                      data-component="kipas"
+                      title="Kipas Pendingin"
+                    ></div>
+
+                    <div class="component-info" id="bearing-info">
+                      <h5>Bearing</h5>
+                      <p>
+                        Komponen yang memungkinkan bagian pompa untuk berputar
+                        dengan gesekan minimal.
+                      </p>
+                    </div>
+                    <div class="component-info" id="seal-info">
+                      <h5>Seal Mechanic</h5>
+                      <p>Mencegah kebocoran air dari bagian berputar pompa.</p>
+                    </div>
+                    <div class="component-info" id="dinamo-info">
+                      <h5>Dinamo</h5>
+                      <p>
+                        Motor yang mengubah energi listrik menjadi gerakan
+                        mekanis.
+                      </p>
+                    </div>
+                    <div class="component-info" id="kipas-info">
+                      <h5>Kipas Pendingin</h5>
+                      <p>Menjaga suhu dinamo agar tidak terlalu panas.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Input Parameter</h5>
+                  <form id="diagnosis-form">
+                    <div class="mb-3">
+                      <label for="suara_pompa" class="form-label"
+                        >Suara Pompa (0-100 dB)</label
+                      >
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="suara_pompa"
+                        name="suara_pompa"
+                        min="0"
+                        max="100"
+                        value="30"
+                      />
+                      <div class="d-flex justify-content-between">
+                        <span>0 dB</span>
+                        <span id="suara_value">30 dB</span>
+                        <span>100 dB</span>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="tekanan_air" class="form-label"
+                        >Tekanan Air (0-10 Bar)</label
+                      >
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="tekanan_air"
+                        name="tekanan_air"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        value="5"
+                      />
+                      <div class="d-flex justify-content-between">
+                        <span>0 Bar</span>
+                        <span id="tekanan_value">5.0 Bar</span>
+                        <span>10 Bar</span>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="putaran_motor" class="form-label"
+                        >Putaran Motor (0-3000 RPM)</label
+                      >
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="putaran_motor"
+                        name="putaran_motor"
+                        min="0"
+                        max="3000"
+                        value="1500"
+                      />
+                      <div class="d-flex justify-content-between">
+                        <span>0 RPM</span>
+                        <span id="putaran_value">1500 RPM</span>
+                        <span>3000 RPM</span>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Bantuan Kipas Pendingin</label>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="bantuan_kipas"
+                          id="kipas_no"
+                          value="0"
+                          checked
+                        />
+                        <label class="form-check-label" for="kipas_no"
+                          >Tidak</label
+                        >
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="bantuan_kipas"
+                          id="kipas_yes"
+                          value="1"
+                        />
+                        <label class="form-check-label" for="kipas_yes"
+                          >Ya</label
+                        >
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                      Diagnosis
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Section -->
+          <div id="result-section">
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Hasil Diagnosis</h5>
+
+                    <div class="gauge-container">
+                      <div class="gauge">
+                        <div id="kerusakan-gauge" class="gauge-value"></div>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <span>0%</span>
+                        <h4 id="kerusakan-value">0%</h4>
+                        <span>100%</span>
+                      </div>
+                    </div>
+
+                    <div class="alert" id="diagnosis-result">
+                      Hasil diagnosis akan muncul di sini.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h5>Komponen Bermasalah</h5>
+                  </div>
+                  <div class="card-body">
+                    <ul id="komponen-list" class="list-group">
+                      <!-- Components will be added here -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript akan dimuat dari file terpisah -->
+    <script src="/static/js/script.js"></script>
+    <script src="/static/js/chatbot.js"></script>
+  </body>
+</html>
