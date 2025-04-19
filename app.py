@@ -21,24 +21,24 @@ def setup_fuzzy_system():
     )
 
     # Membership functions
-    suara_pompa["rendah"] = fuzz.trimf(suara_pompa.universe, [0, 0, 40])
+    suara_pompa["rendah"] = fuzz.trimf(suara_pompa.universe, [0, 20, 40])
     suara_pompa["sedang"] = fuzz.trimf(suara_pompa.universe, [30, 50, 70])
-    suara_pompa["tinggi"] = fuzz.trimf(suara_pompa.universe, [60, 100, 100])
+    suara_pompa["tinggi"] = fuzz.trimf(suara_pompa.universe, [60, 80, 100])
 
-    tekanan_air["lemah"] = fuzz.trimf(tekanan_air.universe, [0, 0, 5])
+    tekanan_air["lemah"] = fuzz.trimf(tekanan_air.universe, [0, 2.5, 5])
     tekanan_air["sedang"] = fuzz.trimf(tekanan_air.universe, [3, 5, 7])
-    tekanan_air["kuat"] = fuzz.trimf(tekanan_air.universe, [6, 10, 10])
+    tekanan_air["kuat"] = fuzz.trimf(tekanan_air.universe, [6, 8, 10])
 
-    putaran_motor["lemah"] = fuzz.trimf(putaran_motor.universe, [0, 0, 1500])
-    putaran_motor["normal"] = fuzz.trimf(putaran_motor.universe, [1000, 2000, 2500])
-    putaran_motor["tinggi"] = fuzz.trimf(putaran_motor.universe, [2000, 3000, 3000])
+    putaran_motor["lemah"] = fuzz.trimf(putaran_motor.universe, [0, 750, 1500])
+    putaran_motor["normal"] = fuzz.trimf(putaran_motor.universe, [1000, 1750, 2500])
+    putaran_motor["tinggi"] = fuzz.trimf(putaran_motor.universe, [2000, 2500, 3000])
 
     bantuan_kipas["tidak"] = fuzz.trimf(bantuan_kipas.universe, [0, 0, 0])
     bantuan_kipas["ya"] = fuzz.trimf(bantuan_kipas.universe, [1, 1, 1])
 
-    tingkat_kerusakan["ringan"] = fuzz.trimf(tingkat_kerusakan.universe, [0, 0, 40])
+    tingkat_kerusakan["ringan"] = fuzz.trimf(tingkat_kerusakan.universe, [0, 20, 40])
     tingkat_kerusakan["sedang"] = fuzz.trimf(tingkat_kerusakan.universe, [30, 50, 70])
-    tingkat_kerusakan["berat"] = fuzz.trimf(tingkat_kerusakan.universe, [60, 100, 100])
+    tingkat_kerusakan["berat"] = fuzz.trimf(tingkat_kerusakan.universe, [60, 80, 100])
 
     # Fuzzy rules
     rule1 = ctrl.Rule(
